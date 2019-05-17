@@ -5,6 +5,9 @@ const app = express();
 const connectDB = require ('./config/db')
 connectDB();
 
+//middleware so express can read the body
+app.use(express.json({ extend: false }));
+
 const PORT = process.env.PORT || 5000;
 
 app.get('/', (req, res) => res.send('API IS RUNNING!'))
