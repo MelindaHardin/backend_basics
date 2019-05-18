@@ -1,10 +1,12 @@
 const router = require ("express").Router();
 const { check, validationResult } = require ('express-validator/check');
 const bcrypt = require ('bcryptjs');
+const jwt = require ('jsonwebtoken');
 const User = require ('../../models/User');
+const config = require ('config');
 
-// @route GET api/users
-// @desc Test route
+// @route POST api/users
+// @desc Register and sign in route
 // @ access Public (no token required using auth. middleware)
 
 router.post('/',[
@@ -22,10 +24,10 @@ router.post('/',[
      
   try{
       //See if user exists already send back an error
-    let user = await User.findOne({ email })
+    let user = await User.findOne({ email: email });
     if(user){
       res.status(400).json({ errors: [ { msg: 'User already exists'}]});
-    };
+    }
       //if user does NOT exist create instance where a new user can be created in database when called.
     user = new User ({
       name,
@@ -36,10 +38,20 @@ router.post('/',[
       //encrypt password
     const salt = await bcrypt.genSalt(10);
     user.password = await bcrypt.hash(password, salt);
+      //saves user to database 
+    await user.save() 
 
-    await user.save()  //saves user to database 
+    const payload={
+      user:{
+        id: user.id
+      }
+    }
 
-    res.send("This is the User Route")
+    jwt.sign(payload, config.get('jwtSecret'),
+    { expiresIn: 360000}, (err, token)=>{
+      if(err) throw err;
+      res.json({token});
+    })
 
   } catch(err){
     console.log(err.message);
