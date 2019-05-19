@@ -1,11 +1,24 @@
+//to login users already registered 
 const router = require("express").Router();
+const auth= require ('../../middleware/auth');
+const User = require ('../../models/User');
 
-// @route GET api/authentication
+// @route GET api/auth
 // @desc Test route
 // @ access Public (no token required using auth. middleware)
 
-router.get('/', (req, res) =>
-  res.send("This is the AUTHENTICATION Route")
+router.get('/', auth, async (req, res) =>{
+
+  try{
+    const user = await User.findById(req.user.id).select ('-password');
+    res.json(user);
+  }catch(err){
+    console.error(err.message);
+    res.status(500).send("Server Error");
+  }
+
+}
+  
 );
 
 module.exports = router;

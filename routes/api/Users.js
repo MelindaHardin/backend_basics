@@ -3,7 +3,7 @@ const { check, validationResult } = require ('express-validator/check');
 const bcrypt = require ('bcryptjs');
 const jwt = require ('jsonwebtoken');
 const User = require ('../../models/User');
-const config = require ('config');
+const config = require ('config')
 
 // @route POST api/users
 // @desc Register and sign in route
