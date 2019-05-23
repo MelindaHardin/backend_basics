@@ -9,7 +9,8 @@ const UserSchema = new mongoose.Schema({
   }, 
   email:{
     type: String, 
-    required: true, 
+    required: true,
+    match: [/.+@.+\..+/, "Please enter a valid e-mail address"], 
     unique: true
   }, 
   password: {
@@ -22,4 +23,8 @@ const UserSchema = new mongoose.Schema({
   }
 });
 
-module.exports = User = mongoose.model('user', UserSchema)
+// This creates our model from the above schema, using mongoose's model method
+var User = mongoose.model("user", UserSchema);
+
+// Export the model
+module.exports = User;

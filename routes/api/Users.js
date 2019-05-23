@@ -5,9 +5,9 @@ const jwt = require ('jsonwebtoken');
 const User = require ('../../models/User');
 const config = require ('config')
 
-// @route POST api/users
-// @desc Register and sign in route
-// @ access Public (no token required using auth. middleware)
+// @route   POST api/users
+// @desc    Register and sign in route
+// @access  Public
 
 router.post('/',[
   check('name', 'Name is required.').not().isEmpty(),
